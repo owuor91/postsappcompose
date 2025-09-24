@@ -30,11 +30,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.owuor91.postscompose.model.Post
 import dev.owuor91.postscompose.model.UIState
 import dev.owuor91.postscompose.viewmodel.PostsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PostsScreenImpl(
   onClickPost: (Int) -> Unit,
-  viewModel: PostsViewModel = viewModel()
+  viewModel: PostsViewModel = koinViewModel()
 ) {
   LaunchedEffect(Unit) {
     viewModel.fetchPosts()

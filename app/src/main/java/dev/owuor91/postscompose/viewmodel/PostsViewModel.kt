@@ -1,6 +1,5 @@
 package dev.owuor91.postscompose.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,10 +7,11 @@ import dev.owuor91.postscompose.model.Comment
 import dev.owuor91.postscompose.model.Post
 import dev.owuor91.postscompose.model.UIState
 import dev.owuor91.postscompose.repository.PostsRepository
+import dev.owuor91.postscompose.repository.PostsRepositoryImpl
 import kotlinx.coroutines.launch
 
-class PostsViewModel: ViewModel() {
-  val postsRepository = PostsRepository()
+class PostsViewModel(val postsRepository: PostsRepository): ViewModel() {
+  
   val posts = MutableLiveData<List<Post>>()
   val uiState = MutableLiveData(UIState())
   val post = MutableLiveData<Post>()
