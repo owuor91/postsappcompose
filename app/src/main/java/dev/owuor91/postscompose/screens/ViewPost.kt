@@ -1,5 +1,7 @@
 package dev.owuor91.postscompose.screens
 
+import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,18 +18,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.owuor91.postscompose.model.Comment
 import dev.owuor91.postscompose.viewmodel.PostsViewModel
 import org.koin.androidx.compose.koinViewModel
+import androidx.core.content.edit
 
 @Composable
 fun ViewPostScreen(
   postId: Int,
   postsViewModel: PostsViewModel = koinViewModel()
 ) {
+  val context = LocalContext.current
   LaunchedEffect(Unit) {
     postsViewModel.fetchPostById(postId)
     postsViewModel.fetchPostComments(postId)
@@ -38,6 +43,12 @@ fun ViewPostScreen(
   Column(Modifier
     .fillMaxSize()
     .padding(16.dp)) {
+    
+    Text(text = "LOG OUT", modifier = Modifier.clickable {
+      val prefs = context.getSharedPreferences("POSTSAPP_PREFS",Context.MODE_PRIVATE)
+      prefs.edit { remove("ACCESS_TOKEN") }
+    })
+    
     post?.let {
       Text(text = it.title, fontWeight = FontWeight.Bold)
       Spacer(Modifier.height(8.dp))

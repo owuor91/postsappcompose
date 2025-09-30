@@ -4,21 +4,26 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dev.owuor91.postscompose.screens.Screen.Login
 import dev.owuor91.postscompose.screens.Screen.Posts
 import dev.owuor91.postscompose.screens.Screen.ViewPost
 
 sealed class Screen(val route: String) {
   object Posts : Screen("posts")
   object ViewPost : Screen("viewPost")
+  object Login: Screen("login")
 }
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(startDestination: String) {
   val navController = rememberNavController()
   NavHost(
     navController = navController,
-    startDestination = Posts.route
+    startDestination = startDestination
   ) {
+    composable(Login.route) {
+      LoginScreen(onLoginSuccess = {navController.navigate(Posts.route)})
+    }
     composable(Posts.route) {
       PostsScreenImpl(
         onClickPost = {postId-> navController.navigate("${ViewPost.route}/$postId")}
