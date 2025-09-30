@@ -3,7 +3,6 @@ package dev.owuor91.postscompose.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,10 +22,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.owuor91.postscompose.model.Post
 import dev.owuor91.postscompose.model.UIState
 import dev.owuor91.postscompose.viewmodel.PostsViewModel
@@ -44,9 +43,11 @@ fun PostsScreenImpl(
   val uiState by viewModel.uiState.observeAsState(UIState())
   
   
-Column(modifier = Modifier
-    .fillMaxSize()
-    .padding(16.dp)) {
+  Column(
+    modifier = Modifier
+      .fillMaxSize()
+      .padding(16.dp)
+  ) {
     
     when {
       uiState.isLoading -> {
@@ -54,14 +55,16 @@ Column(modifier = Modifier
           Modifier.fillMaxSize(),
           contentAlignment = Alignment.Center
         ) {
-          CircularProgressIndicator()
+          CircularProgressIndicator(modifier = Modifier.testTag("progressBar"))
         }
       }
       
       uiState.success != null -> {
         if (posts != null) {
-          LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            items(posts!!) { post -> PostCard(post,onClickPost) } }
+          LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.testTag("postsList")) {
+            items(posts!!) { post -> PostCard(post, onClickPost) }
+          }
         }
       }
       
@@ -78,10 +81,10 @@ Column(modifier = Modifier
 }
 
 @Composable
-fun PostCard(post: Post, onClickPost: (Int)->Unit) {
+fun PostCard(post: Post, onClickPost: (Int) -> Unit) {
   Card(
-    onClick = {onClickPost(post.id)},
-    modifier = Modifier.fillMaxWidth(),
+    onClick = { onClickPost(post.id) },
+    modifier = Modifier.fillMaxWidth().testTag("clickablePost"),
     shape = RoundedCornerShape(8.dp),
     colors = CardDefaults.cardColors(containerColor = Color.White)
   ) {
@@ -103,5 +106,5 @@ fun PostsScreenPreview() {
     body = "et iusto sed quo iure\\nvoluptatem occaecati omnis eligendi aut ad\\nvoluptatem doloribus vel accusantium quis pariatur\\nmolestiae porro eius odio et labore et velit aut"
   )
   
-  PostCard(post,{})
+  PostCard(post, {})
 }
